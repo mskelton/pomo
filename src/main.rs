@@ -40,6 +40,10 @@ enum Commands {
         /// Display a push notification
         #[arg(short, long)]
         notify: bool,
+
+        /// Custom duration for the focus session
+        #[arg(index = 1)]
+        duration: Option<String>,
     },
     /// Stops the current pomodoro session
     Stop {
@@ -57,7 +61,9 @@ fn main() {
             cmd::start_break(duration, *notify);
         }
         Some(Commands::Duration {}) => cmd::change_duration(),
-        Some(Commands::Start { notify }) => cmd::start_session(*notify),
+        Some(Commands::Start { duration, notify }) => {
+            cmd::start_session(duration, *notify)
+        }
         Some(Commands::Stop { notify }) => cmd::stop_session(*notify),
         None => cmd::print_status(cli.no_emoji),
     }

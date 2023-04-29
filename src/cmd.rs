@@ -38,12 +38,45 @@ pub fn change_duration() {
     println!("mark")
 }
 
-pub fn start_session(notify: bool) {
-    println!("mark")
+pub fn start_session(duration: &Option<String>, notify: bool) {
+    let config = read_config();
+    let duration_str = duration
+        .to_owned()
+        .unwrap_or(config.durations.focus_duration)
+        .to_string();
+
+    let parsed_duration = match humantime::parse_duration(&duration_str) {
+        Ok(d) => Duration::from_std(d).unwrap(),
+        Err(_) => Duration::minutes(25),
+    };
+
+    write_status(Status {
+        status_type: StatusType::Focus,
+        end: Utc::now() + parsed_duration,
+        notified: false,
+    });
+
+    if notify {
+        send_notification(
+            String::from("Your focus session has started!"),
+            config.emojis.focus_emoji,
+            config.sound,
+        )
+    }
 }
 
 pub fn stop_session(notify: bool) {
-    println!("mark")
+    clear_status();
+
+    if notify {
+        let config = read_config();
+
+        send_notification(
+            String::from("Your session has stopped!"),
+            config.emojis.focus_emoji,
+            config.sound,
+        )
+    }
 }
 
 pub fn print_status(no_emoji: bool) {
