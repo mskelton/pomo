@@ -113,18 +113,3 @@ pub fn read_config() -> Config {
 
     return deserialized.unwrap();
 }
-
-pub fn write_config(config: Config) {
-    let serialized = match serde_json::to_string(&config) {
-        Ok(s) => s,
-        Err(_) => {
-            println!("Error saving config");
-            process::exit(1);
-        }
-    };
-
-    if fs::write(get_config_file(), serialized).is_err() {
-        println!("Error saving config");
-        process::exit(1);
-    }
-}

@@ -1,3 +1,5 @@
+use std::process;
+
 use chrono::prelude::*;
 use chrono::Duration;
 
@@ -34,8 +36,26 @@ pub fn start_break(duration: &Option<String>, notify: bool) {
     }
 }
 
-pub fn change_duration() {
-    println!("mark")
+pub fn change_duration(duration: &Option<String>) {
+    let status = read_status();
+
+    if status.is_none() || status.as_ref().unwrap().end < Utc::now() {
+        println!("No session in progress");
+        process::exit(1);
+    }
+
+    let mut status = status.unwrap();
+    if duration.is_none() {
+        return;
+    }
+
+    let parsed = humantime::parse_duration(duration.as_ref().unwrap());
+    if parsed.is_err() {
+        return;
+    }
+
+    status.end = Utc::now() + Duration::from_std(parsed.unwrap()).unwrap();
+    write_status(status);
 }
 
 pub fn start_session(duration: &Option<String>, notify: bool) {

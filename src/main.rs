@@ -34,7 +34,11 @@ enum Commands {
         duration: Option<String>,
     },
     /// Changes the duration of the current timer
-    Duration {},
+    Duration {
+        /// Custom duration for the focus session
+        #[arg(index = 1)]
+        duration: Option<String>,
+    },
     /// Starts a pomodoro session
     Start {
         /// Display a push notification
@@ -60,7 +64,7 @@ fn main() {
         Some(Commands::Break { duration, notify }) => {
             cmd::start_break(duration, *notify);
         }
-        Some(Commands::Duration {}) => cmd::change_duration(),
+        Some(Commands::Duration { duration }) => cmd::change_duration(duration),
         Some(Commands::Start { duration, notify }) => {
             cmd::start_session(duration, *notify)
         }
