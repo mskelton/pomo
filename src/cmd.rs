@@ -58,7 +58,7 @@ pub fn change_duration(duration: &Option<String>) {
     write_status(status);
 }
 
-pub fn start_session(duration: &Option<String>, notify: bool) {
+pub fn start_focus(duration: &Option<String>, notify: bool) {
     let config = read_config();
     let duration_str = duration
         .to_owned()

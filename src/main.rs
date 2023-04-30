@@ -66,7 +66,7 @@ fn main() {
         }
         Some(Commands::Duration { duration }) => cmd::change_duration(duration),
         Some(Commands::Start { duration, notify }) => {
-            cmd::start_session(duration, *notify)
+            cmd::start_focus(duration, *notify)
         }
         Some(Commands::Stop { notify }) => cmd::stop_session(*notify),
         None => cmd::print_status(cli.no_emoji),

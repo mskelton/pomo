@@ -12,7 +12,7 @@ pub struct Durations {
     #[serde(default = "default_break_duration", rename = "break")]
     pub break_duration: String,
 
-    #[serde(default = "default_focus_duration")]
+    #[serde(default = "default_focus_duration", rename = "focus")]
     pub focus_duration: String,
 }
 
@@ -30,10 +30,10 @@ pub struct Emojis {
     #[serde(default = "default_break_emoji", rename = "break")]
     pub break_emoji: String,
 
-    #[serde(default = "default_focus_emoji")]
+    #[serde(default = "default_focus_emoji", rename = "focus")]
     pub focus_emoji: String,
 
-    #[serde(default = "default_warn_emoji")]
+    #[serde(default = "default_warn_emoji", rename = "warn")]
     pub warn_emoji: Vec<String>,
 }
 
