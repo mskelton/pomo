@@ -153,9 +153,9 @@ fn format_time(duration: Duration) -> String {
     let hours = (duration.num_seconds() / 60) / 60;
     let sign = if duration.num_seconds() < 0 { "-" } else { "" };
 
-    if duration.num_hours() >= 1 {
+    if duration.num_hours().abs() >= 1 {
         format!("{}{}h{:02}m", sign, hours.abs(), minutes.abs())
-    } else if duration.num_minutes() >= 1 {
+    } else if duration.num_minutes().abs() >= 1 {
         format!("{}{}m{:02}s", sign, minutes.abs(), seconds.abs())
     } else {
         format!("{}{}s", sign, seconds.abs())
