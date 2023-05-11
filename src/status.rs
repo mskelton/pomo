@@ -1,8 +1,5 @@
-use std::{
-    fs,
-    path::{Path, PathBuf},
-    process,
-};
+use std::path::{Path, PathBuf};
+use std::{fs, process};
 
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};

@@ -3,8 +3,9 @@ mod config;
 mod notifications;
 mod status;
 
-use clap::{Parser, Subcommand};
 use std::path::PathBuf;
+
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
