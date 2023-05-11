@@ -60,15 +60,15 @@ enum Commands {
 fn main() {
     let cli = Cli::parse();
 
-    match &cli.command {
+    match cli.command {
         Some(Commands::Break { duration, notify }) => {
-            cmd::start_break(duration, *notify);
+            cmd::start_break(duration, notify);
         }
         Some(Commands::Duration { duration }) => cmd::change_duration(duration),
         Some(Commands::Start { duration, notify }) => {
-            cmd::start_focus(duration, *notify)
+            cmd::start_focus(duration, notify)
         }
-        Some(Commands::Stop { notify }) => cmd::stop_session(*notify),
+        Some(Commands::Stop { notify }) => cmd::stop_session(notify),
         None => cmd::print_status(cli.no_emoji),
     }
 }

@@ -9,12 +9,10 @@ use crate::notifications::send_notification;
 use crate::status::read_status;
 use crate::status::{clear_status, write_status, Status, StatusType};
 
-pub fn start_break(duration: &Option<String>, notify: bool) {
+pub fn start_break(duration: Option<String>, notify: bool) {
     let config = read_config();
-    let duration_str = duration
-        .to_owned()
-        .unwrap_or(config.durations.break_duration)
-        .to_string();
+    let duration_str =
+        duration.unwrap_or(config.durations.break_duration).to_string();
 
     let parsed_duration = match humantime::parse_duration(&duration_str) {
         Ok(d) => Duration::from_std(d).unwrap(),
@@ -36,34 +34,30 @@ pub fn start_break(duration: &Option<String>, notify: bool) {
     }
 }
 
-pub fn change_duration(duration: &Option<String>) {
-    let status = read_status();
+pub fn change_duration(duration: Option<String>) {
+    let status = read_status().filter(|s| s.end > Utc::now());
 
-    if status.is_none() || status.as_ref().unwrap().end < Utc::now() {
+    if let Some(mut s) = status {
+        let duration = &duration.unwrap_or_default();
+        let parsed = humantime::parse_duration(duration);
+
+        if let Ok(d) = parsed {
+            s.end = Utc::now() + Duration::from_std(d).unwrap();
+            write_status(s);
+        } else {
+            println!("Invalid duration");
+            process::exit(1);
+        }
+    } else {
         println!("No session in progress");
         process::exit(1);
     }
-
-    let mut status = status.unwrap();
-    if duration.is_none() {
-        return;
-    }
-
-    let parsed = humantime::parse_duration(duration.as_ref().unwrap());
-    if parsed.is_err() {
-        return;
-    }
-
-    status.end = Utc::now() + Duration::from_std(parsed.unwrap()).unwrap();
-    write_status(status);
 }
 
-pub fn start_focus(duration: &Option<String>, notify: bool) {
+pub fn start_focus(duration: Option<String>, notify: bool) {
     let config = read_config();
-    let duration_str = duration
-        .to_owned()
-        .unwrap_or(config.durations.focus_duration)
-        .to_string();
+    let duration_str =
+        duration.unwrap_or(config.durations.focus_duration).to_string();
 
     let parsed_duration = match humantime::parse_duration(&duration_str) {
         Ok(d) => Duration::from_std(d).unwrap(),
