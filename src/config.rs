@@ -45,6 +45,21 @@ impl Default for Emojis {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct Sounds {
+    #[serde(default = "default_sound", rename = "start")]
+    pub start: String,
+
+    #[serde(default = "default_sound", rename = "end")]
+    pub end: String,
+}
+
+impl Default for Sounds {
+    fn default() -> Self {
+        Sounds { start: default_sound(), end: default_sound() }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     #[serde(default)]
     pub durations: Durations,
@@ -52,8 +67,8 @@ pub struct Config {
     #[serde(default)]
     pub emojis: Emojis,
 
-    #[serde(default = "default_sound")]
-    pub sound: String,
+    #[serde(default)]
+    pub sound: Sounds,
 }
 
 fn default_break_duration() -> String {
@@ -62,10 +77,6 @@ fn default_break_duration() -> String {
 
 fn default_focus_duration() -> String {
     String::from("30m")
-}
-
-fn default_sound() -> String {
-    String::from("default")
 }
 
 fn default_break_emoji() -> String {
@@ -78,6 +89,10 @@ fn default_focus_emoji() -> String {
 
 fn default_warn_emoji() -> Vec<String> {
     vec![String::from("🔴"), String::from("⭕")]
+}
+
+fn default_sound() -> String {
+    String::from("default")
 }
 
 pub fn get_config_dir() -> PathBuf {

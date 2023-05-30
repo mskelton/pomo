@@ -33,7 +33,7 @@ pub fn start_break(duration: Option<String>, notify: bool) {
         send_notification(
             String::from("Your break has started!"),
             config.emojis.break_emoji,
-            config.sound,
+            config.sound.start,
         )
     }
 }
@@ -78,7 +78,7 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
         send_notification(
             String::from("Your focus session has started!"),
             config.emojis.focus_emoji,
-            config.sound,
+            config.sound.start,
         )
     }
 }
@@ -92,7 +92,7 @@ pub fn stop_session(notify: bool) {
         send_notification(
             String::from("Your session has stopped!"),
             config.emojis.focus_emoji,
-            config.sound,
+            config.sound.end,
         )
     }
 }
@@ -127,12 +127,12 @@ pub fn print_status(no_emoji: bool) {
             StatusType::Focus => send_notification(
                 String::from("Focus completed, let's take a break!"),
                 config.emojis.break_emoji,
-                config.sound,
+                config.sound.end,
             ),
             StatusType::Break => send_notification(
                 String::from("Break is over, back to work!"),
                 config.emojis.focus_emoji,
-                config.sound,
+                config.sound.end,
             ),
         }
 
