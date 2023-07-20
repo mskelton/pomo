@@ -4,8 +4,19 @@ Simple pomodoro timer CLI written in Rust.
 
 ## Installation
 
+You can install Pomo by running the install script which will download
+the [latest release](https://github.com/mskelton/pomo/releases/latest).
+
 ```bash
-cargo install --git https://github.com/mskelton/pomo
+curl -LSfs https://mskelton.dev/pomo/install | sh
+```
+
+Or you can build from source.
+
+```bash
+git clone git@github.com:mskelton/pomo.git
+cd pomo
+cargo install --path .
 ```
 
 ## Usage
