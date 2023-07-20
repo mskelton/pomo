@@ -6,11 +6,7 @@ use chrono::Duration;
 use crate::config::{read_config, Config};
 use crate::notifications::send_notification;
 use crate::status::{
-    clear_status,
-    read_status,
-    write_status,
-    Status,
-    StatusType,
+    clear_status, read_status, write_status, Status, StatusType,
 };
 
 pub fn start_break(duration: Option<String>, notify: bool) {
