@@ -5,7 +5,7 @@ Simple pomodoro timer CLI written in Rust.
 ## Installation
 
 ```bash
-cargo install --git https://github.com/mskelton/pomo-rs
+cargo install --git https://github.com/mskelton/pomo
 ```
 
 ## Usage
