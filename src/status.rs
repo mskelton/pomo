@@ -14,7 +14,7 @@ pub enum StatusType {
 pub struct Status {
     pub status_type: StatusType,
     pub end: DateTime<Utc>,
-    pub notified: bool,
+    pub last_notified: Option<DateTime<Utc>>,
 }
 
 pub fn get_status_file() -> PathBuf {

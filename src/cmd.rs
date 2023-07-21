@@ -22,7 +22,7 @@ pub fn start_break(duration: Option<String>, notify: bool) {
     write_status(Status {
         status_type: StatusType::Break,
         end: Utc::now() + parsed_duration,
-        notified: false,
+        last_notified: None,
     });
 
     if notify {
@@ -67,7 +67,7 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
     write_status(Status {
         status_type: StatusType::Focus,
         end: Utc::now() + parsed_duration,
-        notified: false,
+        last_notified: None,
     });
 
     if notify {
@@ -117,8 +117,9 @@ pub fn print_status(no_emoji: bool) {
         print!("{} {}\n", emoji, formatted)
     }
 
-    // Notify the user when the remaining time has elapsed
-    if !status.notified && remaining.num_seconds() <= 0 {
+    // Notify the user when the remaining time has elapsed. After that, notify
+    // the user every 5 minutes to remind them to take a break.
+    if remaining.num_seconds() <= 0 && should_notify(&status) {
         match status.status_type {
             StatusType::Focus => send_notification(
                 String::from("Focus completed, let's take a break!"),
@@ -134,7 +135,7 @@ pub fn print_status(no_emoji: bool) {
 
         // Update the status to indicate the notification has been queued to
         // prevent duplicate notifications.
-        status.notified = true;
+        status.last_notified = Some(Utc::now());
         write_status(status);
     }
 }
@@ -174,4 +175,12 @@ fn get_emoji(config: &Config, status: &Status, remaining: Duration) -> String {
         StatusType::Focus => config.emojis.focus_emoji.to_owned(),
         StatusType::Break => config.emojis.break_emoji.to_owned(),
     }
+}
+
+/// Determine if the user should be notified based on the last time they were
+/// notified.
+fn should_notify(status: &Status) -> bool {
+    status
+        .last_notified
+        .map_or(true, |t| t < (Utc::now() - Duration::minutes(5)))
 }
