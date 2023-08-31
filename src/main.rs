@@ -50,6 +50,16 @@ enum Commands {
         #[arg(index = 1)]
         duration: Option<String>,
     },
+    /// Toggles to either a new focus session or break
+    Toggle {
+        /// Display a push notification
+        #[arg(short, long)]
+        notify: bool,
+
+        /// Custom duration for the focus session or break
+        #[arg(index = 1)]
+        duration: Option<String>,
+    },
     /// Stops the current pomodoro session
     Stop {
         /// Display a push notification
@@ -68,6 +78,9 @@ fn main() {
         Some(Commands::Duration { duration }) => cmd::change_duration(duration),
         Some(Commands::Start { duration, notify }) => {
             cmd::start_focus(duration, notify)
+        }
+        Some(Commands::Toggle { duration, notify }) => {
+            cmd::toggle_session(duration, notify)
         }
         Some(Commands::Stop { notify }) => cmd::stop_session(notify),
         None => cmd::print_status(cli.no_emoji),

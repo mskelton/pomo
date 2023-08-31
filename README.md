@@ -59,6 +59,22 @@ Or customize the break duration by providing a
 pomo break 10m
 ```
 
+### Toggle
+
+If currently in a focus session, switches to a break, otherwise switch to a new
+focus session. This uses the default session/break duration.
+
+```bash
+pomo toggle
+```
+
+Or customize the session/break duration by providing a 
+[human like duration](https://github.com/tailhook/humantime).
+
+```bash
+pomo toggle 10m
+```
+
 ### Change duration
 
 Changes the duration of the active session using the specified 

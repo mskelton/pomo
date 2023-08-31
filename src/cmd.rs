@@ -79,6 +79,17 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
     }
 }
 
+pub fn toggle_session(duration: Option<String>, notify: bool) {
+    let status = read_status();
+
+    // If there is an active session, start a break, otherwise start a new
+    // focus session.
+    match status.map(|s| s.status_type) {
+        Some(StatusType::Focus) => start_break(duration, notify),
+        _ => start_focus(duration, notify),
+    }
+}
+
 pub fn stop_session(notify: bool) {
     clear_status();
 
