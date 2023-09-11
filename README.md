@@ -110,3 +110,18 @@ The default values for all commands can be customized by creating a `$HOME/.conf
   "sound": "default"
 }
 ```
+
+### Working Hours
+
+You can optional configure working hours for Pomo which will auto start/stop
+when you start and end your working day. You can define a time using a human
+readable time format to define the start and end of each day.
+
+```json
+{
+  "working_hours": {
+    "start": "8am",
+    "end": "5pm"
+  }
+}
+```

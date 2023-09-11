@@ -60,6 +60,18 @@ impl Default for Sounds {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
+pub struct WorkingHours {
+    start: Option<String>,
+    end: Option<String>,
+}
+
+impl Default for WorkingHours {
+    fn default() -> Self {
+        WorkingHours { start: None, end: None }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
     #[serde(default)]
     pub durations: Durations,
@@ -69,6 +81,9 @@ pub struct Config {
 
     #[serde(default)]
     pub sound: Sounds,
+
+    #[serde(default)]
+    pub working_hours: WorkingHours,
 }
 
 fn default_break_duration() -> String {
