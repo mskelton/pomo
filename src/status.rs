@@ -4,8 +4,9 @@ use std::{fs, process};
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub enum StatusType {
+    Idle,
     Focus,
     Break,
 }
@@ -13,6 +14,7 @@ pub enum StatusType {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Status {
     pub status_type: StatusType,
+    pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
     pub last_notified: Option<DateTime<Utc>>,
 }
@@ -50,8 +52,10 @@ pub fn write_status(status: Status) {
 }
 
 pub fn clear_status() {
-    if fs::write(get_status_file(), "{}").is_err() {
-        println!("Error saving status");
-        process::exit(1);
-    }
+    write_status(Status {
+        status_type: StatusType::Idle,
+        start: Utc::now(),
+        end: Utc::now(),
+        last_notified: None,
+    });
 }

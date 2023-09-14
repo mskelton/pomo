@@ -2,6 +2,7 @@ mod cmd;
 mod config;
 mod notifications;
 mod status;
+mod time;
 
 use std::path::PathBuf;
 
@@ -75,14 +76,20 @@ fn main() {
         Some(Commands::Break { duration, notify }) => {
             cmd::start_break(duration, notify);
         }
-        Some(Commands::Duration { duration }) => cmd::change_duration(duration),
+        Some(Commands::Duration { duration }) => {
+            cmd::change_duration(duration);
+        }
         Some(Commands::Start { duration, notify }) => {
             cmd::start_focus(duration, notify)
         }
         Some(Commands::Toggle { duration, notify }) => {
             cmd::toggle_session(duration, notify)
         }
-        Some(Commands::Stop { notify }) => cmd::stop_session(notify),
-        None => cmd::print_status(cli.no_emoji),
+        Some(Commands::Stop { notify }) => {
+            cmd::stop_session(notify);
+        }
+        None => {
+            cmd::print_status(cli.no_emoji);
+        }
     }
 }

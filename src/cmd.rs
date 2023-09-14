@@ -3,11 +3,13 @@ use std::process;
 use chrono::prelude::*;
 use chrono::Duration;
 
-use crate::config::{read_config, Config};
+use crate::config::read_config;
+use crate::config::Emojis;
 use crate::notifications::send_notification;
 use crate::status::{
     clear_status, read_status, write_status, Status, StatusType,
 };
+use crate::time;
 
 pub fn start_break(duration: Option<String>, notify: bool) {
     let config = read_config();
@@ -21,6 +23,7 @@ pub fn start_break(duration: Option<String>, notify: bool) {
 
     write_status(Status {
         status_type: StatusType::Break,
+        start: Utc::now(),
         end: Utc::now() + parsed_duration,
         last_notified: None,
     });
@@ -66,6 +69,7 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
 
     write_status(Status {
         status_type: StatusType::Focus,
+        start: Utc::now(),
         end: Utc::now() + parsed_duration,
         last_notified: None,
     });
@@ -104,26 +108,43 @@ pub fn stop_session(notify: bool) {
     }
 }
 
-pub fn print_status(no_emoji: bool) {
-    let status = read_status();
+pub fn print_status(no_emoji: bool) -> Option<()> {
+    let mut status = read_status()?;
+    let config = read_config();
+    let work_start = time::parse_time(config.working_hours.start);
+    let work_end = time::parse_time(config.working_hours.end);
 
-    // Don't print anything if there is no active session
-    if status.is_none() {
-        return;
+    // If the end of last session was before the start of the work day, and
+    // the work day has started, then start a new focus session.
+    if let Some(start) = work_start {
+        if status.end < start && Utc::now() > start {
+            start_focus(None, false);
+            return Some(());
+        }
     }
 
-    // Save IO ops by reading the config only if there is a running session
-    let config = read_config();
+    // If the current time was started before the end of the work day, and now
+    // the work day has ended, then clear the status.
+    if let Some(end) = work_end {
+        if status.start < end && Utc::now() > end {
+            clear_status();
+            return Some(());
+        }
+    }
+
+    // Bail if there is no active session
+    if status.status_type == StatusType::Idle {
+        return None;
+    }
 
     // Print the remaining time
-    let mut status = status.unwrap();
     let remaining = status.end - Utc::now();
     let formatted = format_time(remaining);
 
     if no_emoji {
         print!("{}", formatted)
     } else {
-        let emoji = get_emoji(&config, &status, remaining);
+        let emoji = get_emoji(&config.emojis, &status, remaining);
 
         print!("{} {}\n", emoji, formatted)
     }
@@ -142,6 +163,7 @@ pub fn print_status(no_emoji: bool) {
                 config.emojis.focus_emoji,
                 config.sound.end,
             ),
+            StatusType::Idle => (),
         }
 
         // Update the status to indicate the notification has been queued to
@@ -149,6 +171,8 @@ pub fn print_status(no_emoji: bool) {
         status.last_notified = Some(Utc::now());
         write_status(status);
     }
+
+    Some(())
 }
 
 /// Display the format either as 1h10m, 1m10s, or 10s based on the remaining
@@ -168,23 +192,24 @@ fn format_time(duration: Duration) -> String {
     }
 }
 
-fn get_emoji(config: &Config, status: &Status, remaining: Duration) -> String {
+fn get_emoji(emojis: &Emojis, status: &Status, remaining: Duration) -> String {
     // Cycle through the warning emojis to make the timer "blink" when used in a
     // statusline. This can be disabled by overriding the configuration to only
     // provide a single emoji.
     if remaining.num_seconds() <= 0 {
-        let index = remaining.num_seconds().abs() as usize
-            % config.emojis.warn_emoji.len();
+        let index =
+            remaining.num_seconds().abs() as usize % emojis.warn_emoji.len();
 
-        return match config.emojis.warn_emoji.get(index) {
+        return match emojis.warn_emoji.get(index) {
             Some(emoji) => emoji.to_string(),
             None => String::from(""),
         };
     }
 
     match status.status_type {
-        StatusType::Focus => config.emojis.focus_emoji.to_owned(),
-        StatusType::Break => config.emojis.break_emoji.to_owned(),
+        StatusType::Focus => emojis.focus_emoji.to_owned(),
+        StatusType::Break => emojis.break_emoji.to_owned(),
+        StatusType::Idle => "".to_owned(),
     }
 }
 
