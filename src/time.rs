@@ -1,6 +1,6 @@
-use chrono::{DateTime, Local, NaiveTime, Utc};
+use chrono::{DateTime, Local, NaiveTime};
 
-pub fn parse_time(s: Option<String>) -> Option<DateTime<Utc>> {
+pub fn parse_time(s: Option<String>) -> Option<DateTime<Local>> {
     let lower = s.unwrap_or("".to_string()).to_lowercase();
     let (time, period) = lower.split_at(lower.len() - 2);
 
@@ -16,7 +16,8 @@ pub fn parse_time(s: Option<String>) -> Option<DateTime<Utc>> {
         _ => return None,
     };
 
-    NaiveTime::parse_from_str(&time, format)
-        .map(|time| Local::now().date_naive().and_time(time).and_utc())
-        .ok()
+    NaiveTime::parse_from_str(&time, format).ok().and_then(|time| {
+        let l = Local::now();
+        l.date_naive().and_time(time).and_local_timezone(l.timezone()).single()
+    })
 }
