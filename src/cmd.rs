@@ -114,8 +114,8 @@ pub fn print_status(no_emoji: bool) -> Option<()> {
     let work_start = time::parse_time(config.working_hours.start);
     let work_end = time::parse_time(config.working_hours.end);
 
-    // If the work day has started, and the last session end time is before
-    // the start of the work day, then start a new focus session.
+    // If the end of last session was before the start of the work day, and
+    // the work day has started, then start a new focus session.
     if let Some(start) = work_start {
         if status.end < start && Utc::now() > start {
             start_focus(None, false);
