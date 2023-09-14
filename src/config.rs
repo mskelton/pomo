@@ -61,8 +61,8 @@ impl Default for Sounds {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WorkingHours {
-    start: Option<String>,
-    end: Option<String>,
+    pub start: Option<String>,
+    pub end: Option<String>,
 }
 
 impl Default for WorkingHours {
