@@ -13,6 +13,7 @@ pub enum StatusType {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Status {
+    #[serde(rename = "type")]
     pub status_type: StatusType,
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
