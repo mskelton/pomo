@@ -1,7 +1,7 @@
 use chrono::{DateTime, Local, NaiveTime};
 
 pub fn parse_time(s: Option<String>) -> Option<DateTime<Local>> {
-    let lower = s.unwrap_or("".to_string()).to_lowercase();
+    let lower = s?.to_lowercase();
     let (time, period) = lower.split_at(lower.len() - 2);
 
     let time = if !time.contains(":") {
@@ -16,8 +16,13 @@ pub fn parse_time(s: Option<String>) -> Option<DateTime<Local>> {
         _ => return None,
     };
 
-    NaiveTime::parse_from_str(&time, format).ok().and_then(|time| {
-        let l = Local::now();
-        l.date_naive().and_time(time).and_local_timezone(l.timezone()).single()
-    })
+    NaiveTime::parse_from_str(&time, format)
+        .ok()
+        .and_then(|time| {
+            let l = Local::now();
+            l.date_naive()
+                .and_time(time)
+                .and_local_timezone(l.timezone())
+                .single()
+        })
 }
