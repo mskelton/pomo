@@ -1,5 +1,8 @@
 name: Build
 on: push
+defaults:
+  run:
+    working-directory: cli
 jobs:
   build:
     name: Build

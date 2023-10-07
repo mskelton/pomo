@@ -3,6 +3,9 @@ on:
   release:
     types:
       - published
+defaults:
+  run:
+    working-directory: cli
 env:
   BINARY_NAME: pomo
 jobs:
