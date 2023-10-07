@@ -16,7 +16,7 @@ Or you can build from source.
 ```bash
 git clone git@github.com:mskelton/pomo.git
 cd pomo
-cargo install --path .
+cargo install --path cli
 ```
 
 ## Usage
