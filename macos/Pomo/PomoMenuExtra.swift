@@ -13,13 +13,11 @@ struct PomoMenuExtra: Scene {
             Divider()
             Button("Quit", action: quit).keyboardShortcut("q")
         } label: {
-            if text == "" {
-                Image(systemName: "timer")
-            } else {
-                Text(text).onReceive(timer) { _ in
+            Text(text.isEmpty ? "" : text)
+                .onReceive(timer) { _ in
                     text = update(status: nil)
                 }
-            }
+                .overlay(text.isEmpty ? Image(systemName: "timer") : nil)
         }
     }
 
