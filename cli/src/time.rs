@@ -16,13 +16,8 @@ pub fn parse_time(s: Option<String>) -> Option<DateTime<Local>> {
         _ => return None,
     };
 
-    NaiveTime::parse_from_str(&time, format)
-        .ok()
-        .and_then(|time| {
-            let l = Local::now();
-            l.date_naive()
-                .and_time(time)
-                .and_local_timezone(l.timezone())
-                .single()
-        })
+    NaiveTime::parse_from_str(&time, format).ok().and_then(|time| {
+        let l = Local::now();
+        l.date_naive().and_time(time).and_local_timezone(l.timezone()).single()
+    })
 }
