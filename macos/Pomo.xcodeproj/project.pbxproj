@@ -15,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4DD36B3A2AD3664F004D3535 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4DD36E602AD1B41A004D4C90 /* Pomo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD36E632AD1B41A004D4C90 /* PomoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomoApp.swift; sourceTree = "<group>"; };
 		4DD36E672AD1B41B004D4C90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		4DD36E622AD1B41A004D4C90 /* Pomo */ = {
 			isa = PBXGroup;
 			children = (
+				4DD36B3A2AD3664F004D3535 /* Info.plist */,
 				4DD36E632AD1B41A004D4C90 /* PomoApp.swift */,
 				4DD36E672AD1B41B004D4C90 /* Assets.xcassets */,
 				4DD956DB2AD1B65D00F691C7 /* PomoMenuExtra.swift */,
@@ -284,7 +286,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pomo;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,7 +317,9 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomo/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pomo;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
