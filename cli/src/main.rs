@@ -31,6 +31,10 @@ struct Cli {
 enum Commands {
     /// Starts a pomodoro break
     Break {
+        /// Enable push notifications
+        #[arg(short, long)]
+        notify: bool,
+
         /// Custom duration for the break
         #[arg(index = 1)]
         duration: Option<String>,
@@ -43,13 +47,17 @@ enum Commands {
     },
     /// Starts a pomodoro session
     Start {
+        /// Enable push notifications
+        #[arg(short, long)]
+        notify: bool,
+
         /// Custom duration for the focus session
         #[arg(index = 1)]
         duration: Option<String>,
     },
     /// Toggles to either a new focus session or break
     Toggle {
-        /// Display a push notification
+        /// Enable push notifications
         #[arg(short, long)]
         notify: bool,
 
@@ -59,7 +67,7 @@ enum Commands {
     },
     /// Stops the current pomodoro session
     Stop {
-        /// Display a push notification
+        /// Enable push notifications
         #[arg(short, long)]
         notify: bool,
     },
@@ -69,14 +77,14 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Break { duration }) => {
-            cmd::start_break(duration, cli.notify);
+        Some(Commands::Break { duration, notify }) => {
+            cmd::start_break(duration, notify);
         }
         Some(Commands::Duration { duration }) => {
             cmd::change_duration(duration);
         }
-        Some(Commands::Start { duration }) => {
-            cmd::start_focus(duration, cli.notify)
+        Some(Commands::Start { duration, notify }) => {
+            cmd::start_focus(duration, notify)
         }
         Some(Commands::Toggle { duration, notify }) => {
             cmd::toggle_session(duration, notify)
