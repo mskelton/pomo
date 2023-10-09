@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D08EEA12AD4A228003B5D3A /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D08EEA02AD4A228003B5D3A /* Notifications.swift */; };
+		4D08EEA52AD4A246003B5D3A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D08EEA42AD4A246003B5D3A /* Utils.swift */; };
+		4D6F75152AD49F5200062D57 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6F75142AD49F5200062D57 /* Config.swift */; };
 		4DD36E642AD1B41A004D4C90 /* PomoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD36E632AD1B41A004D4C90 /* PomoApp.swift */; };
 		4DD36E682AD1B41B004D4C90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DD36E672AD1B41B004D4C90 /* Assets.xcassets */; };
 		4DD36E6B2AD1B41B004D4C90 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DD36E6A2AD1B41B004D4C90 /* Preview Assets.xcassets */; };
@@ -15,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D08EEA02AD4A228003B5D3A /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		4D08EEA42AD4A246003B5D3A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		4D6F75142AD49F5200062D57 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		4DD36B3A2AD3664F004D3535 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4DD36E602AD1B41A004D4C90 /* Pomo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DD36E632AD1B41A004D4C90 /* PomoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomoApp.swift; sourceTree = "<group>"; };
@@ -60,6 +66,9 @@
 				4DD36E672AD1B41B004D4C90 /* Assets.xcassets */,
 				4DD956DB2AD1B65D00F691C7 /* PomoMenuExtra.swift */,
 				4DD956DA2AD1B65D00F691C7 /* Status.swift */,
+				4D08EEA02AD4A228003B5D3A /* Notifications.swift */,
+				4D08EEA42AD4A246003B5D3A /* Utils.swift */,
+				4D6F75142AD49F5200062D57 /* Config.swift */,
 				4DD36E6C2AD1B41B004D4C90 /* Pomo.entitlements */,
 				4DD36E692AD1B41B004D4C90 /* Preview Content */,
 			);
@@ -144,9 +153,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D08EEA12AD4A228003B5D3A /* Notifications.swift in Sources */,
 				4DD36E642AD1B41A004D4C90 /* PomoApp.swift in Sources */,
+				4D6F75152AD49F5200062D57 /* Config.swift in Sources */,
 				4DD956DE2AD1B65D00F691C7 /* PomoMenuExtra.swift in Sources */,
 				4DD956DD2AD1B65D00F691C7 /* Status.swift in Sources */,
+				4D08EEA52AD4A246003B5D3A /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
