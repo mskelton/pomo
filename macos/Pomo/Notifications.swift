@@ -11,19 +11,15 @@ func maybeNotify(status: Status, config: Config) {
         case .Focus:
             sendNotification(
                 "Focus completed, let's take a break!",
-                emoji: config.emojis?.breakEmoji ?? "🥛",
-                sound: UNNotificationSoundName(rawValue: "Glass")
-//                emoji: config.emojis.breakEmoji,
-//                sound: config.sound.end
+                emoji: config.emojis?.breakEmoji ?? "🥂",
+                sound: config.sound?.end
             )
 
         case .Break:
             sendNotification(
                 "Break is over, back to work!",
-                emoji: config.emojis?.breakEmoji ?? "🥛",
-                sound: UNNotificationSoundName(rawValue: "Glass")
-//                emoji: config.emojis.focusEmoji,
-//                sound: config.sound.end
+                emoji: config.emojis?.focusEmoji ?? "🍅",
+                sound: config.sound?.end
             )
 
         case .Idle:
@@ -49,13 +45,16 @@ func shouldNotify(status: Status) -> Bool {
     return lastNotified.timeIntervalSinceNow < -300
 }
 
-func sendNotification(_ text: String, emoji: String, sound: UNNotificationSoundName) {
+func sendNotification(_ text: String, emoji: String, sound: String?) {
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { success, _ in
         if success {
             let content = UNMutableNotificationContent()
             content.title = "Pomo \(emoji)"
             content.subtitle = text
-            content.sound = UNNotificationSound(named: sound)
+
+            content.sound = sound != nil
+                ? UNNotificationSound(named: UNNotificationSoundName(sound!))
+                : UNNotificationSound.default
 
             let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
             UNUserNotificationCenter.current().add(request)
