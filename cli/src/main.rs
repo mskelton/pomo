@@ -19,6 +19,10 @@ struct Cli {
     #[arg(long)]
     no_emoji: bool,
 
+    /// Enable push notifications
+    #[arg(short, long)]
+    notify: bool,
+
     #[command(subcommand)]
     command: Option<Commands>,
 }
@@ -27,10 +31,6 @@ struct Cli {
 enum Commands {
     /// Starts a pomodoro break
     Break {
-        /// Display a push notification
-        #[arg(short, long)]
-        notify: bool,
-
         /// Custom duration for the break
         #[arg(index = 1)]
         duration: Option<String>,
@@ -43,10 +43,6 @@ enum Commands {
     },
     /// Starts a pomodoro session
     Start {
-        /// Display a push notification
-        #[arg(short, long)]
-        notify: bool,
-
         /// Custom duration for the focus session
         #[arg(index = 1)]
         duration: Option<String>,
@@ -73,14 +69,14 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Break { duration, notify }) => {
-            cmd::start_break(duration, notify);
+        Some(Commands::Break { duration }) => {
+            cmd::start_break(duration, cli.notify);
         }
         Some(Commands::Duration { duration }) => {
             cmd::change_duration(duration);
         }
-        Some(Commands::Start { duration, notify }) => {
-            cmd::start_focus(duration, notify)
+        Some(Commands::Start { duration }) => {
+            cmd::start_focus(duration, cli.notify)
         }
         Some(Commands::Toggle { duration, notify }) => {
             cmd::toggle_session(duration, notify)
@@ -89,7 +85,7 @@ fn main() {
             cmd::stop_session(notify);
         }
         None => {
-            cmd::print_status(cli.no_emoji);
+            cmd::print_status(cli.no_emoji, cli.notify);
         }
     }
 }

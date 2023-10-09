@@ -108,7 +108,7 @@ pub fn stop_session(notify: bool) {
     }
 }
 
-pub fn print_status(no_emoji: bool) -> Option<()> {
+pub fn print_status(no_emoji: bool, notify: bool) -> Option<()> {
     let mut status = read_status()?;
     let config = read_config();
     let work_start = time::parse_time(config.working_hours.start);
@@ -145,13 +145,12 @@ pub fn print_status(no_emoji: bool) -> Option<()> {
         print!("{}", formatted)
     } else {
         let emoji = get_emoji(&config.emojis, &status, remaining);
-
         print!("{} {}\n", emoji, formatted)
     }
 
     // Notify the user when the remaining time has elapsed. After that, notify
     // the user every 5 minutes to remind them to take a break.
-    if remaining.num_seconds() <= 0 && should_notify(&status) {
+    if notify && remaining.num_seconds() <= 0 && should_notify(&status) {
         match status.status_type {
             StatusType::Focus => send_notification(
                 String::from("Focus completed, let's take a break!"),
