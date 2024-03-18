@@ -18,7 +18,7 @@ pub fn start_break(duration: Option<String>, notify: bool) {
 
     let parsed_duration = match humantime::parse_duration(&duration_str) {
         Ok(d) => Duration::from_std(d).unwrap(),
-        Err(_) => Duration::minutes(5),
+        Err(_) => Duration::try_minutes(5).unwrap(),
     };
 
     write_status(Status {
@@ -64,7 +64,7 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
 
     let parsed_duration = match humantime::parse_duration(&duration_str) {
         Ok(d) => Duration::from_std(d).unwrap(),
-        Err(_) => Duration::minutes(25),
+        Err(_) => Duration::try_minutes(25).unwrap(),
     };
 
     write_status(Status {
@@ -185,7 +185,7 @@ fn format_time(duration: Duration) -> String {
     if duration.num_hours().abs() >= 1 {
         format!("{}{}h{:02}m", sign, hours.abs(), minutes.abs())
     } else if duration.num_minutes().abs() >= 1 {
-        format!("{}{}m{:02}s", sign, minutes.abs(), seconds.abs())
+        format!("{}{}m", sign, minutes.abs())
     } else {
         format!("{}{}s", sign, seconds.abs())
     }
@@ -217,5 +217,5 @@ fn get_emoji(emojis: &Emojis, status: &Status, remaining: Duration) -> String {
 fn should_notify(status: &Status) -> bool {
     status
         .last_notified
-        .map_or(true, |t| t < (Utc::now() - Duration::minutes(5)))
+        .map_or(true, |t| t < (Utc::now() - Duration::try_minutes(5).unwrap()))
 }
