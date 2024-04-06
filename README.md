@@ -8,7 +8,7 @@ You can install Pomo by running the install script which will download
 the [latest release](https://github.com/mskelton/pomo/releases/latest).
 
 ```bash
-curl -LSfs https://mskelton.dev/pomo/install | sh
+curl -LSfs https://go.mskelton.dev/pomo/install | sh
 ```
 
 Or you can build from source.
