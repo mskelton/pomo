@@ -11,7 +11,7 @@ use crate::status::{
 };
 use crate::time;
 
-pub fn start_break(duration: Option<String>, notify: bool) {
+pub fn start_break(duration: Option<String>, notify: bool, one_shot: bool) {
     let config = read_config();
     let duration_str =
         duration.unwrap_or(config.durations.break_duration).to_string();
@@ -21,18 +21,19 @@ pub fn start_break(duration: Option<String>, notify: bool) {
         Err(_) => Duration::try_minutes(5).unwrap(),
     };
 
-    write_status(Status {
+    write_status(&Status {
         status_type: StatusType::Break,
         start: Utc::now(),
         end: Utc::now() + parsed_duration,
         last_notified: None,
+        one_shot,
     });
 
     if notify {
         send_notification(
             String::from("Your break has started!"),
-            config.emojis.break_emoji,
-            config.sound.start,
+            &config.emojis.break_emoji,
+            &config.sound.start,
         )
     }
 }
@@ -46,7 +47,7 @@ pub fn change_duration(duration: Option<String>) {
 
         if let Ok(d) = parsed {
             s.end = Utc::now() + Duration::from_std(d).unwrap();
-            write_status(s);
+            write_status(&s);
         } else {
             println!("Invalid duration");
             process::exit(1);
@@ -57,7 +58,7 @@ pub fn change_duration(duration: Option<String>) {
     }
 }
 
-pub fn start_focus(duration: Option<String>, notify: bool) {
+pub fn start_focus(duration: Option<String>, notify: bool, one_shot: bool) {
     let config = read_config();
     let duration_str =
         duration.unwrap_or(config.durations.focus_duration).to_string();
@@ -67,30 +68,31 @@ pub fn start_focus(duration: Option<String>, notify: bool) {
         Err(_) => Duration::try_minutes(25).unwrap(),
     };
 
-    write_status(Status {
+    write_status(&Status {
         status_type: StatusType::Focus,
         start: Utc::now(),
         end: Utc::now() + parsed_duration,
         last_notified: None,
+        one_shot,
     });
 
     if notify {
         send_notification(
             String::from("Your focus session has started!"),
-            config.emojis.focus_emoji,
-            config.sound.start,
+            &config.emojis.focus_emoji,
+            &config.sound.start,
         )
     }
 }
 
-pub fn toggle_session(duration: Option<String>, notify: bool) {
+pub fn toggle_session(duration: Option<String>, notify: bool, one_shot: bool) {
     let status = read_status();
 
     // If there is an active session, start a break, otherwise start a new
     // focus session.
     match status.map(|s| s.status_type) {
-        Some(StatusType::Focus) => start_break(duration, notify),
-        _ => start_focus(duration, notify),
+        Some(StatusType::Focus) => start_break(duration, notify, one_shot),
+        _ => start_focus(duration, notify, one_shot),
     }
 }
 
@@ -102,8 +104,8 @@ pub fn stop_session(notify: bool) {
 
         send_notification(
             String::from("Your session has stopped!"),
-            config.emojis.focus_emoji,
-            config.sound.end,
+            &config.emojis.focus_emoji,
+            &config.sound.end,
         )
     }
 }
@@ -118,7 +120,7 @@ pub fn print_status(no_emoji: bool, notify: bool) -> Option<()> {
     // the work day has started, then start a new focus session.
     if let Some(start) = work_start {
         if status.end < start && Utc::now() > start {
-            start_focus(None, false);
+            start_focus(None, false, false);
             return Some(());
         }
     }
@@ -141,26 +143,19 @@ pub fn print_status(no_emoji: bool, notify: bool) -> Option<()> {
     let remaining = status.end - Utc::now();
     let formatted = format_time(remaining);
 
-    if no_emoji {
-        print!("{}", formatted)
-    } else {
-        let emoji = get_emoji(&config.emojis, &status, remaining);
-        print!("{} {}\n", emoji, formatted)
-    }
-
     // Notify the user when the remaining time has elapsed. After that, notify
     // the user every 5 minutes to remind them to take a break.
     if notify && remaining.num_seconds() <= 0 && should_notify(&status) {
         match status.status_type {
             StatusType::Focus => send_notification(
                 String::from("Focus completed, let's take a break!"),
-                config.emojis.break_emoji,
-                config.sound.end,
+                &config.emojis.break_emoji,
+                &config.sound.end,
             ),
             StatusType::Break => send_notification(
                 String::from("Break is over, back to work!"),
-                config.emojis.focus_emoji,
-                config.sound.end,
+                &config.emojis.focus_emoji,
+                &config.sound.end,
             ),
             StatusType::Idle => (),
         }
@@ -168,7 +163,20 @@ pub fn print_status(no_emoji: bool, notify: bool) -> Option<()> {
         // Update the status to indicate the notification has been queued to
         // prevent duplicate notifications.
         status.last_notified = Some(Utc::now());
-        write_status(status);
+        write_status(&status);
+    }
+
+    // If the one-shot flag is set and the remaining time has elapsed, then
+    // exit as if there is no active session.
+    if status.one_shot && remaining.num_seconds() <= 0 {
+        return Some(());
+    }
+
+    if no_emoji {
+        print!("{}", formatted)
+    } else {
+        let emoji = get_emoji(&config.emojis, &status, remaining);
+        print!("{} {}\n", emoji, formatted)
     }
 
     Some(())

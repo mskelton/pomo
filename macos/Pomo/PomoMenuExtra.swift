@@ -32,7 +32,8 @@ struct PomoMenuExtra: Scene {
             type: .Focus,
             start: Date(),
             end: Date().addingTimeInterval(30 * 60),
-            lastNotified: nil
+            lastNotified: nil,
+            oneShot: false
         ))
     }
 
@@ -41,7 +42,8 @@ struct PomoMenuExtra: Scene {
             type: .Break,
             start: Date(),
             end: Date().addingTimeInterval(5 * 60),
-            lastNotified: nil
+            lastNotified: nil,
+            oneShot: false
         ))
     }
 
@@ -50,7 +52,8 @@ struct PomoMenuExtra: Scene {
             type: .Idle,
             start: Date(),
             end: Date(),
-            lastNotified: nil
+            lastNotified: nil,
+            oneShot: false
         ))
     }
 
@@ -58,7 +61,6 @@ struct PomoMenuExtra: Scene {
         NSApplication.shared.terminate(nil)
     }
 }
-
 
 func update(config: Config, status: Status?) -> String {
     if let status = status {

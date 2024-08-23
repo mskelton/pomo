@@ -9,6 +9,7 @@ struct Status: Codable {
     let start: Date
     let end: Date
     let lastNotified: Date?
+    let oneShot: Bool
 }
 
 func getStatus() -> Status {
@@ -25,7 +26,8 @@ func getStatus() -> Status {
             type: .Idle,
             start: Date(),
             end: Date(),
-            lastNotified: Date()
+            lastNotified: Date(),
+            oneShot: false
         )
     }
 }

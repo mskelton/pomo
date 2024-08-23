@@ -1,6 +1,6 @@
 use std::process::Command;
 
-pub fn send_notification(message: String, emoji: String, sound: String) {
+pub fn send_notification(message: String, emoji: &String, sound: &String) {
     Command::new("osascript")
         .arg("-e")
         .arg(format!(

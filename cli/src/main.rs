@@ -35,6 +35,10 @@ enum Commands {
         #[arg(short, long)]
         notify: bool,
 
+        /// Don't print the status after the session ends
+        #[arg(short, long)]
+        one_shot: bool,
+
         /// Custom duration for the break
         #[arg(index = 1)]
         duration: Option<String>,
@@ -51,6 +55,10 @@ enum Commands {
         #[arg(short, long)]
         notify: bool,
 
+        /// Don't print the status after the session ends
+        #[arg(short, long)]
+        one_shot: bool,
+
         /// Custom duration for the focus session
         #[arg(index = 1)]
         duration: Option<String>,
@@ -60,6 +68,10 @@ enum Commands {
         /// Enable push notifications
         #[arg(short, long)]
         notify: bool,
+
+        /// Don't print the status after the session ends
+        #[arg(short, long)]
+        one_shot: bool,
 
         /// Custom duration for the focus session or break
         #[arg(index = 1)]
@@ -77,17 +89,17 @@ fn main() {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Break { duration, notify }) => {
-            cmd::start_break(duration, notify);
+        Some(Commands::Break { duration, notify, one_shot }) => {
+            cmd::start_break(duration, notify, one_shot);
         }
         Some(Commands::Duration { duration }) => {
             cmd::change_duration(duration);
         }
-        Some(Commands::Start { duration, notify }) => {
-            cmd::start_focus(duration, notify)
+        Some(Commands::Start { duration, notify, one_shot }) => {
+            cmd::start_focus(duration, notify, one_shot)
         }
-        Some(Commands::Toggle { duration, notify }) => {
-            cmd::toggle_session(duration, notify)
+        Some(Commands::Toggle { duration, notify, one_shot }) => {
+            cmd::toggle_session(duration, notify, one_shot)
         }
         Some(Commands::Stop { notify }) => {
             cmd::stop_session(notify);

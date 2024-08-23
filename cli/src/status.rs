@@ -18,6 +18,7 @@ pub struct Status {
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
     pub last_notified: Option<DateTime<Utc>>,
+    pub one_shot: bool,
 }
 
 pub fn get_status_file() -> PathBuf {
@@ -37,8 +38,8 @@ pub fn read_status() -> Option<Status> {
     };
 }
 
-pub fn write_status(status: Status) {
-    let serialized = match serde_json::to_string(&status) {
+pub fn write_status(status: &Status) {
+    let serialized = match serde_json::to_string(status) {
         Ok(s) => s,
         Err(_) => {
             println!("Error saving status");
@@ -53,10 +54,11 @@ pub fn write_status(status: Status) {
 }
 
 pub fn clear_status() {
-    write_status(Status {
+    write_status(&Status {
         status_type: StatusType::Idle,
         start: Utc::now(),
         end: Utc::now(),
         last_notified: None,
+        one_shot: false,
     });
 }

@@ -32,7 +32,8 @@ func maybeNotify(status: Status, config: Config) {
             type: status.type,
             start: status.start,
             end: status.end,
-            lastNotified: Date()
+            lastNotified: Date(),
+            oneShot: status.oneShot
         ))
     }
 }
