@@ -167,8 +167,9 @@ pub fn print_status(no_emoji: bool, notify: bool) -> Option<()> {
     }
 
     // If the one-shot flag is set and the remaining time has elapsed, then
-    // exit as if there is no active session.
+    // clear the status and exit without printing.
     if status.one_shot && remaining.num_seconds() <= 0 {
+        clear_status();
         return Some(());
     }
 
