@@ -26,16 +26,8 @@ pub fn get_status_file() -> PathBuf {
 }
 
 pub fn read_status() -> Option<Status> {
-    let contents = fs::read_to_string(get_status_file());
-    if contents.is_err() {
-        println!("Error when reading status file");
-        process::exit(1);
-    }
-
-    return match serde_json::from_str::<Status>(&contents.unwrap()) {
-        Ok(s) => Some(s),
-        Err(_) => None,
-    };
+    let contents = fs::read_to_string(get_status_file()).ok()?;
+    serde_json::from_str::<Status>(&contents).ok()
 }
 
 pub fn write_status(status: &Status) {
